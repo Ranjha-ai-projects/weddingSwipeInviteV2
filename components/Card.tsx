@@ -13,16 +13,15 @@ const Card: React.FC<CardProps> = ({ data, onRemove, isFront }) => {
   const x = useMotionValue(0);
   
   // Transform horizontal drag into rotation and fading
-  const rotate = useTransform(x, [-200, 200], [-15, 15]);
-  const opacity = useTransform(x, [-250, -180, 0, 180, 250], [0, 1, 1, 1, 0]);
+  const rotate = useTransform(x, [0, 200], [0, 15]);
+  const opacity = useTransform(x, [0, 180, 250], [1, 1, 0]);
   
-  // Visual cues for swipe action
+  // Visual cues for swipe action (Only Right Swipe/Love)
   const likeOpacity = useTransform(x, [40, 120], [0, 1]);
-  const nopeOpacity = useTransform(x, [-40, -120], [0, 1]);
 
   const handleDragEnd = (_: any, info: PanInfo) => {
-    // Threshold for swipe or velocity (flick)
-    if (Math.abs(info.offset.x) > 80 || Math.abs(info.velocity.x) > 400) {
+    // Only allow swipe to the right (positive x offset or velocity)
+    if (info.offset.x > 80 || info.velocity.x > 400) {
       onRemove();
     }
   };
@@ -31,7 +30,8 @@ const Card: React.FC<CardProps> = ({ data, onRemove, isFront }) => {
     <motion.div
       style={{ x, rotate, opacity, zIndex: isFront ? 50 : 0 }}
       drag={isFront ? "x" : false}
-      dragConstraints={{ left: 0, right: 0 }}
+      dragConstraints={{ left: 0, right: 1000 }} // Restrict moving to the left
+      dragElastic={0.1}
       onDragEnd={handleDragEnd}
       whileDrag={{ scale: 1.03 }}
       className="absolute inset-0 cursor-grab active:cursor-grabbing touch-none select-none"
@@ -53,7 +53,7 @@ const Card: React.FC<CardProps> = ({ data, onRemove, isFront }) => {
           />
         </div>
 
-        {/* Swipe Badge: LOVE */}
+        {/* Swipe Badge: LOVE (Only Right) */}
         {isFront && (
           <motion.div
             style={{ opacity: likeOpacity }}
@@ -63,28 +63,18 @@ const Card: React.FC<CardProps> = ({ data, onRemove, isFront }) => {
           </motion.div>
         )}
 
-        {/* Swipe Badge: NEXT */}
-        {isFront && (
-          <motion.div
-            style={{ opacity: nopeOpacity }}
-            className="absolute top-8 right-8 border-4 border-rose-400 text-rose-400 font-black px-4 py-1 rounded-xl rotate-[15deg] uppercase text-2xl pointer-events-none z-30"
-          >
-            Next
-          </motion.div>
-        )}
-
         {/* Info Box */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent flex flex-col justify-end p-6 md:p-8 text-white z-20">
-          <div className="space-y-2">
+          <div className="space-y-1">
             {data.tag && (
-              <span className="inline-block bg-rose-500 text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full w-fit shadow-lg shadow-rose-900/20">
+              <span className="inline-block bg-rose-500/80 backdrop-blur-sm text-[10px] font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full w-fit shadow-lg mb-3">
                 {data.tag}
               </span>
             )}
-            <h2 className="text-2xl md:text-3xl font-bold serif leading-tight drop-shadow-md">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-normal script leading-[1.1] drop-shadow-xl text-rose-50 -ml-1">
               {data.title}
             </h2>
-            <p className="text-[13px] md:text-sm text-gray-200 leading-relaxed font-light drop-shadow-sm opacity-90 line-clamp-3">
+            <p className="text-[13px] md:text-sm text-gray-200 leading-relaxed font-light drop-shadow-sm opacity-90 line-clamp-3 mt-3">
               {data.description}
             </p>
           </div>

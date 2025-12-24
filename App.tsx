@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Deck from './components/Deck';
 import GuestbookForm from './components/GuestbookForm';
 import { cardsData } from './data';
-import { Heart } from 'lucide-react';
+import { Heart, ChevronRight } from 'lucide-react';
 
 const App: React.FC = () => {
   const [isFinished, setIsFinished] = useState(false);
@@ -59,7 +59,16 @@ const App: React.FC = () => {
 
       <footer className="py-4 text-center text-gray-400 text-[10px] md:text-xs z-10 shrink-0">
         {!isFinished ? (
-          <p className="px-4">Swipe left to skip, right to love</p>
+          <div className="flex flex-col items-center gap-2">
+            <p className="px-4 font-medium text-gray-500 uppercase tracking-widest">Swipe right to discover our journey</p>
+            <motion.div
+              animate={{ x: [0, 8, 0], opacity: [0.4, 1, 0.4] }}
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+              className="bg-rose-100 p-1 rounded-full"
+            >
+              <ChevronRight className="w-5 h-5 text-rose-500" />
+            </motion.div>
+          </div>
         ) : (
           <p className="px-4">Thank you for being part of our story</p>
         )}
