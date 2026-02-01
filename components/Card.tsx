@@ -77,6 +77,8 @@ const Card: React.FC<CardProps> = ({ data, onRemove, isFront }) => {
             <p className="text-[13px] md:text-sm text-gray-200 leading-relaxed font-light drop-shadow-sm opacity-90 line-clamp-3 mt-3">
               {data.description}
             </p>
+            {data.date && <p className="text-xs md:text-sm text-gray-300 mt-2">Date: {data.date}</p>}
+            {data.venue && <p className="text-xs md:text-sm text-gray-300">Venue: {data.venue}</p>}
           </div>
         </div>
       </div>

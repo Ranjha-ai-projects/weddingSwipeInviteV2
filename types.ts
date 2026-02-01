@@ -5,6 +5,8 @@ export interface CardData {
   description: string;
   image: string;
   tag?: string;
+  date?: string;
+  venue?: string;
 }
 
 export interface GuestbookEntry {
