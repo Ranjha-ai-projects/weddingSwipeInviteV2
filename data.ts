@@ -11,37 +11,37 @@ export const cardsData: CardData[] = [
   {
     id: 1,
     title: "The Engagement Promise",
-    description: "Exchanging rings in a sparkling hall, they began their journey amidst cheers.",
+    description: "With cheers and sparkling rings, our forever officially began.",
     image: "/images/scene1.png",
-    tag: "The First Date",
+    tag: "Where It All Started",
     date: "2026-03-15",
-    venue: "Grand Ballroom"
+    venue: "Grand Ballroom, Bangalore"
   },
   {
     id: 2,
-    title: "Intricate Mehndi Love",
-    description: "Covered in turmeric and marigolds, the couple laughed amidst showers of love from family.",
+    title: "Mehndi & Magic",
+    description: "Hands painted with love, hearts wrapped in laughter and colors.",
     image: "/images/scene2.png",
-    tag: "Our Passions",
+    tag: "Love in Every Stroke",
     date: "2026-03-20",
-    venue: "The Royal Gardens"
+    venue: "The Royal Gardens, Bangalore"
   },
   {
     id: 3,
-    title: "Golden Haldi Joy",
-    description: "We've shared countless nights of dancing and laughter. Life is just one big celebration when we're together.",
+    title: "Haldi Hues",
+    description: "Golden smiles, playful moments, and blessings in abundance.",
     image: "/images/scene3.png",
-    tag: "Memories",
+    tag: "Pure Joy",
     date: "2026-03-21",
-    venue: "The Royal Gardens"
+    venue: "The Royal Gardens, Bangalore"
   },
   {
     id: 4,
-    title: "The Sacred Wedding Vow",
-    description: "Around the holy fire in royal attire, they solemnly took their eternal vows.",
+    title: "Forever, From This Moment",
+    description: "By sacred flames, we promised a lifetime of love.",
     image: "/images/scene4.png",
     tag: "The Big Day",
     date: "2026-03-22",
-    venue: "Grand Temple"
+    venue: "Grand Temple, Bangalore"
   }
 ];

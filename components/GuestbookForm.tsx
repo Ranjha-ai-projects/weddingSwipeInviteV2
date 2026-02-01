@@ -1,113 +1,136 @@
-
 import React, { useState } from 'react';
-import { Send, Heart, CheckCircle } from 'lucide-react';
+
+const WHATSAPP_PHONE_NUMBER = '919878627770'; // India number with country code
 
 const GuestbookForm: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-  const [submitted, setSubmitted] = useState(false);
+  const [name, setName] = useState('');
+  const [message, setMessage] = useState('');
+  const [attendance, setAttendance] = useState<'Attending' | 'Not Attending' | ''>('Attending');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleWhatsAppRSVP = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // 1. Validate that the name is not empty
+    if (!name.trim()) {
+      alert('Oops! Please grace us with your name before sending your RSVP. ✨');
+      return;
+    }
+
     setIsSubmitting(true);
-    
-    // Simulate API call
-    console.log('Form Submitted:', formData);
-    
+
+    // 2. Format a clean WhatsApp message
+    let whatsappMessage = `💍 Wedding RSVP\n`;
+    whatsappMessage += `Name: ${name.trim()}\n`;
+
+    if (attendance) {
+      whatsappMessage += `Attendance: ${attendance}\n`;
+    }
+
+    if (message.trim()) {
+      whatsappMessage += `Message: ${message.trim()}\n`;
+    }
+
+    // Optional: Add a friendly closing
+    whatsappMessage += `\nLooking forward to celebrating! ❤️`;
+
+    // 3. URL encode the message for WhatsApp
+    const encodedMessage = encodeURIComponent(whatsappMessage);
+
+    // 4. Construct the WhatsApp URL
+    const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE_NUMBER}?text=${encodedMessage}`;
+
+    // 5. Redirect the user to WhatsApp
+    window.open(whatsappUrl, '_blank');
+
+    // Optional: Reset form fields and submitting state after a short delay
+    // This delay gives WhatsApp a moment to open before resetting,
+    // which feels more natural to the user.
     setTimeout(() => {
+      setName('');
+      setMessage('');
+      setAttendance('Attending');
       setIsSubmitting(false);
-      setSubmitted(true);
-    }, 1500);
+    }, 1000);
   };
 
-  if (submitted) {
-    return (
-      <div className="flex flex-col items-center justify-center p-12 text-center h-full min-h-[400px]">
-        <div className="w-20 h-20 bg-rose-50 rounded-full flex items-center justify-center mb-6">
-          <CheckCircle className="text-rose-500 w-12 h-12" />
-        </div>
-        <h2 className="text-3xl font-bold text-gray-800 serif mb-4">You're All Set!</h2>
-        <p className="text-gray-500 mb-8">
-          Thank you for your beautiful message. We can't wait to see you there!
-        </p>
-        <div className="flex items-center gap-2 text-rose-400 font-medium">
-          <span>Sent with</span>
-          <Heart className="w-4 h-4 fill-rose-400" />
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="p-8">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-800 serif mb-2">Join Our Guestbook</h2>
-        <p className="text-sm text-gray-500">Share a message or confirm your RSVP</p>
-      </div>
+    <div className="w-full h-full max-h-[75vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col p-6 md:p-8">
+      <h2 className="text-3xl font-script text-gray-800 mb-6 text-center">Share Your Joy!</h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleWhatsAppRSVP} className="flex flex-col gap-4 flex-grow">
+        {/* Name Field (Required) */}
         <div>
-          <label htmlFor="name" className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1 ml-1">
-            Full Name
+          <label htmlFor="name" className="block text-gray-700 text-sm font-medium mb-1">
+            Your Esteemed Name <span className="text-rose-500">*</span>
           </label>
           <input
-            id="name"
-            required
             type="text"
-            className="w-full px-4 py-3 rounded-2xl bg-gray-50 border border-transparent focus:border-rose-200 focus:bg-white focus:outline-none transition-all duration-200"
-            placeholder="E.g. John Doe"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-        </div>
-
-        <div>
-          <label htmlFor="email" className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1 ml-1">
-            Email Address
-          </label>
-          <input
-            id="email"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="E.g., John & Jane Doe"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-rose-400 focus:border-rose-400 transition duration-150 ease-in-out text-gray-800"
             required
-            type="email"
-            className="w-full px-4 py-3 rounded-2xl bg-gray-50 border border-transparent focus:border-rose-200 focus:bg-white focus:outline-none transition-all duration-200"
-            placeholder="E.g. john@example.com"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            aria-required="true"
           />
         </div>
 
+        {/* Attendance Selection (Optional) */}
         <div>
-          <label htmlFor="message" className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1 ml-1">
-            Your Message
+          <label className="block text-gray-700 text-sm font-medium mb-1">
+            Will you grace us with your presence?
+          </label>
+          <div className="flex gap-4">
+            <label className="inline-flex items-center">
+              <input
+                type="radio"
+                value="Attending"
+                checked={attendance === 'Attending'}
+                onChange={() => setAttendance('Attending')}
+                className="form-radio text-rose-500 h-5 w-5"
+              />
+              <span className="ml-2 text-gray-800">Joyfully Attending! ✨</span>
+            </label>
+            <label className="inline-flex items-center">
+              <input
+                type="radio"
+                value="Not Attending"
+                checked={attendance === 'Not Attending'}
+                onChange={() => setAttendance('Not Attending')}
+                className="form-radio text-gray-500 h-5 w-5"
+              />
+              <span className="ml-2 text-gray-800">Sadly, Cannot Make It</span>
+            </label>
+          </div>
+        </div>
+
+        {/* Message Field (Optional) */}
+        <div className="flex-grow">
+          <label htmlFor="message" className="block text-gray-700 text-sm font-medium mb-1">
+            A Special Note (Optional)
           </label>
           <textarea
             id="message"
-            required
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Share your wishes or a lovely memory..."
             rows={4}
-            className="w-full px-4 py-3 rounded-2xl bg-gray-50 border border-transparent focus:border-rose-200 focus:bg-white focus:outline-none transition-all duration-200 resize-none"
-            placeholder="Tell us something sweet..."
-            value={formData.message}
-            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-          />
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-rose-400 focus:border-rose-400 transition duration-150 ease-in-out text-gray-800 resize-y min-h-[80px]"
+          ></textarea>
         </div>
 
+        {/* Send RSVP Button */}
         <button
           type="submit"
+          className={`w-full px-6 py-3 rounded-xl font-bold text-lg transition duration-300 ease-in-out ${
+            isSubmitting
+              ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+              : 'bg-rose-500 text-white hover:bg-rose-600 shadow-md'
+          }`}
           disabled={isSubmitting}
-          className={`w-full py-4 rounded-2xl bg-rose-500 text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-rose-200 active:scale-[0.98] transition-all duration-200 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:bg-rose-600'}`}
         >
-          {isSubmitting ? (
-            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-          ) : (
-            <>
-              <span>Send Invitation Response</span>
-              <Send className="w-4 h-4" />
-            </>
-          )}
+          {isSubmitting ? 'Sending Joy...' : 'Send 💌'}
         </button>
       </form>
     </div>
